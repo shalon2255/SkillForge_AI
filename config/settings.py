@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     'users',
 'dashboard',
 'interviews',
+'tailwind',
+'theme',
 ]
-
+TAILWIND_APP_NAME = 'theme'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -85,7 +87,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+import os
 
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

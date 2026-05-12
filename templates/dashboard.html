@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Card 1 -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+
+        <h2 class="text-gray-500 text-sm">
+            Total Interviews
+        </h2>
+
+        <h1 class="text-3xl font-bold mt-2">
+            12
+        </h1>
+
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+
+        <h2 class="text-gray-500 text-sm">
+            Average Score
+        </h2>
+
+        <h1 class="text-3xl font-bold mt-2">
+            78%
+        </h1>
+
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+
+        <h2 class="text-gray-500 text-sm">
+            Weak Topics
+        </h2>
+
+        <h1 class="text-3xl font-bold mt-2">
+            4
+        </h1>
+
+    </div>
+
+</div>
+
+
+<!-- Recent Interviews -->
+
+<div class="bg-white p-6 rounded-2xl shadow mt-10">
+
+    <h2 class="text-2xl font-bold mb-6">
+        Recent Interviews
+    </h2>
+
+    <div class="space-y-4">
+
+        <div class="border p-4 rounded-xl">
+
+            <h3 class="font-semibold">
+                Python Developer Interview
+            </h3>
+
+            <p class="text-gray-500">
+                Score: 82%
+            </p>
+
+        </div>
+
+        <div class="border p-4 rounded-xl">
+
+            <h3 class="font-semibold">
+                Django Interview
+            </h3>
+
+            <p class="text-gray-500">
+                Score: 74%
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
