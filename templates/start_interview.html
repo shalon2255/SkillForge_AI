@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+    {% if submitted %}
+
+        <div class="bg-white p-8 rounded-2xl shadow">
+
+            <h1 class="text-4xl font-bold mb-8">
+                Interview Result
+            </h1>
+
+            <div class="bg-black text-white p-6 rounded-xl mb-8 flex justify-between">
+
+                <h2 class="text-3xl font-bold">
+                    {{ score }}/10
+                </h2>
+
+                <h2 class="text-xl font-semibold">
+                    {{ performance }}
+                </h2>
+
+            </div>
+
+            {% for result in results %}
+
+                <div class="border p-6 rounded-2xl mb-6">
+
+                    <div class="flex justify-between items-center mb-4">
+
+                        <h2 class="text-xl font-bold">
+                            {{ result.question }}
+                        </h2>
+
+                        {% if result.correct %}
+
+                            <span class="text-3xl">✅</span>
+
+                        {% else %}
+
+                            <span class="text-3xl">❌</span>
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <h3 class="font-semibold mb-2">
+                            Your Answer
+                        </h3>
+
+                        <p class="bg-gray-100 p-4 rounded-xl">
+                            {{ result.answer }}
+                        </p>
+
+                    </div>
+
+                    <div>
+
+                        <h3 class="font-semibold mb-2">
+                            AI Evaluation
+                        </h3>
+
+                        <pre class="whitespace-pre-wrap bg-gray-100 p-4 rounded-xl">
+{{ result.evaluation }}
+                        </pre>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="bg-white p-8 rounded-2xl shadow">
+
+            <h1 class="text-3xl font-bold mb-8">
+                {{ category.name }} Interview
+            </h1>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                {% for question in questions %}
+
+                    <div class="bg-gray-100 p-6 rounded-xl mb-6">
+
+                        <h2 class="text-lg font-semibold mb-4">
+                            {{ question }}
+                        </h2>
+
+                        <input
+                            type="hidden"
+                            name="questions"
+                            value="{{ question }}">
+
+                        <textarea
+                            name="answer{{ forloop.counter }}"
+                            class="w-full border p-4 rounded-xl h-32"
+                            placeholder="Write your answer here..."
+                        ></textarea>
+
+                    </div>
+
+                {% endfor %}
+
+                <button
+                    class="bg-black text-white px-6 py-3 rounded-xl">
+
+                    Submit Interview
+
+                </button>
+
+            </form>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

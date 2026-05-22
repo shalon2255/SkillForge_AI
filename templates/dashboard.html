@@ -2,43 +2,36 @@
 
 {% block content %}
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<h1 class="text-4xl font-bold mb-10">
+    Dashboard
+</h1>
 
-    <!-- Card 1 -->
-    <div class="bg-white p-6 rounded-2xl shadow">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+
+    <!-- Total Interviews -->
+
+    <div class="bg-white p-8 rounded-2xl shadow">
 
         <h2 class="text-gray-500 text-sm">
             Total Interviews
         </h2>
 
-        <h1 class="text-3xl font-bold mt-2">
-            12
+        <h1 class="text-4xl font-bold mt-4">
+            {{ total_interviews }}
         </h1>
 
     </div>
 
-    <!-- Card 2 -->
-    <div class="bg-white p-6 rounded-2xl shadow">
+    <!-- Average Score -->
+
+    <div class="bg-white p-8 rounded-2xl shadow">
 
         <h2 class="text-gray-500 text-sm">
             Average Score
         </h2>
 
-        <h1 class="text-3xl font-bold mt-2">
-            78%
-        </h1>
-
-    </div>
-
-    <!-- Card 3 -->
-    <div class="bg-white p-6 rounded-2xl shadow">
-
-        <h2 class="text-gray-500 text-sm">
-            Weak Topics
-        </h2>
-
-        <h1 class="text-3xl font-bold mt-2">
-            4
+        <h1 class="text-4xl font-bold mt-4">
+            {{ average_score }}/10
         </h1>
 
     </div>
@@ -48,39 +41,61 @@
 
 <!-- Recent Interviews -->
 
-<div class="bg-white p-6 rounded-2xl shadow mt-10">
+<div class="bg-white p-8 rounded-2xl shadow">
 
     <h2 class="text-2xl font-bold mb-6">
         Recent Interviews
     </h2>
 
-    <div class="space-y-4">
+    {% if recent_interviews %}
 
-        <div class="border p-4 rounded-xl">
+        <div class="space-y-4">
 
-            <h3 class="font-semibold">
-                Python Developer Interview
-            </h3>
+            {% for interview in recent_interviews %}
 
-            <p class="text-gray-500">
-                Score: 82%
-            </p>
+                <div class="border p-4 rounded-xl">
+
+                    <div class="flex justify-between items-center">
+
+                        <div>
+
+                            <h3 class="text-xl font-semibold">
+                                {{ interview.category.name }}
+                            </h3>
+
+                            <p class="text-gray-500">
+                                {{ interview.created_at }}
+                            </p>
+
+                        </div>
+
+                        <div class="text-right">
+
+                            <h2 class="text-2xl font-bold">
+                                {{ interview.score }}/10
+                            </h2>
+
+                            <p class="text-sm text-gray-500">
+                                {{ interview.performance }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
 
         </div>
 
-        <div class="border p-4 rounded-xl">
+    {% else %}
 
-            <h3 class="font-semibold">
-                Django Interview
-            </h3>
+        <p class="text-gray-500">
+            No interviews completed yet.
+        </p>
 
-            <p class="text-gray-500">
-                Score: 74%
-            </p>
-
-        </div>
-
-    </div>
+    {% endif %}
 
 </div>
 
