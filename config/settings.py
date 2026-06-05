@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 'tailwind',
 'theme',
 'chatbot',
+'resume_ai',
 ]
 TAILWIND_APP_NAME = 'theme'
 MIDDLEWARE = [
@@ -56,7 +57,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+MEDIA_URL = '/media/'
 
+MEDIA_ROOT = BASE_DIR / 'media'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

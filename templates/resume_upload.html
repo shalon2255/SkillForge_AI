@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-6">
+    <!-- Main Card Container -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        
+        <!-- Section Header -->
+        <div class="border-b border-gray-100 px-8 py-6 bg-gradient-to-r from-white to-gray-50/50">
+            <h1 class="text-2xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
+                <span>📄</span> Resume AI Analyzer
+            </h1>
+            <p class="text-xs text-gray-400 mt-1">Upload your resume to automatically extract text, parse domain skills, and initialize tailored mock interview prep.</p>
+        </div>
+
+        <div class="p-8">
+            <!-- Upload Form Component -->
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="border-2 border-dashed border-gray-200 hover:border-blue-400 bg-gray-50/50 hover:bg-white rounded-2xl p-8 text-center transition-all duration-200 group relative">
+                    <div class="flex flex-col items-center justify-center space-y-2">
+                        <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                            </svg>
+                        </div>
+                        <div class="text-sm text-gray-600 font-medium">
+                            {{ form.resume.label_tag|default:"Select your resume file" }}
+                        </div>
+                        <div class="text-xs text-gray-400">Supports PDF, DOCX up to 5MB</div>
+                    </div>
+                    
+                    <div class="mt-4 max-w-xs mx-auto text-xs text-gray-500 font-sans custom-django-file-input">
+                        {{ form.as_p }}
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-gray-800 hover:bg-gray-700 text-white text-sm font-medium px-6 py-3 rounded-xl shadow-sm transition flex items-center gap-2">
+                        <span>Upload & Analyze</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            {% if success %}
+                <hr class="my-10 border-gray-100">
+
+                <div class="space-y-8">
+                    
+                    <!-- Detected Professional Skills -->
+                    {% if skills %}
+                    <div class="animate-fadeIn">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span> Detected Professional Skills
+                        </h2>
+                        <div class="flex flex-wrap gap-2">
+                            {% for skill in skills %}
+                                <span class="bg-blue-50 text-blue-700 border border-blue-100/60 font-medium px-3.5 py-1.5 rounded-xl text-xs tracking-wide">
+                                    {{ skill }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Generated Interview Questions Section -->
+                    <div class="animate-fadeIn">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Tailored Interview Questions
+                        </h2>
+                        
+                        <div class="space-y-3">
+                            {% for question in questions %}
+                                <div class="bg-gray-50 border border-gray-100 rounded-xl p-4 flex gap-3 items-start hover:border-gray-200 transition">
+                                    <span class="bg-emerald-50 text-emerald-700 rounded-lg text-xs font-bold px-2 py-1 shrink-0 mt-0.5">
+                                        Q{{ forloop.counter }}
+                                    </span>
+                                    <p class="text-sm text-gray-700 font-medium leading-6">
+                                        {{ question }}
+                                    </p>
+                                </div>
+                            {% empty %}
+                                <div class="bg-gray-50/50 border border-dashed border-gray-200 rounded-xl p-6 text-center text-xs text-gray-400">
+                                    Processing structured context to formulate question blocks...
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Extracted Document Text Window -->
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-gray-400"></span> Extracted Document Text
+                        </h2>
+                        <div class="bg-gray-50/80 rounded-2xl border border-gray-100 p-5 max-h-[220px] overflow-y-auto shadow-inner">
+                            <pre class="whitespace-pre-wrap font-sans text-xs text-gray-600 leading-6 tracking-wide">{{ text }}</pre>
+                        </div>
+                    </div>
+
+                    <!-- Action Link: Interactive Practice Module Switch -->
+                    <div class="pt-2">
+                        <a href="{% url 'resume-interview' %}" 
+                           class="flex items-center justify-center w-full bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-4 rounded-xl shadow-md shadow-blue-500/10 transition group text-sm">
+                            <span>Launch Live AI Practice Session</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
+                    </div>
+
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .custom-django-file-input input[type="file"] {
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+    .custom-django-file-input p {
+        margin: 0 !important;
+    }
+</style>
+{% endblock %}

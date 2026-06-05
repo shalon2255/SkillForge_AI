@@ -269,3 +269,87 @@ Rules:
         return {
             "error": str(e)
         }
+@app.post("/resume-interview")
+def resume_interview(data: dict):
+
+    resume_text = data.get("resume_text")
+
+    prompt = f"""
+    Generate interview questions from this resume.
+
+    Rules:
+
+    Return exactly in this format:
+
+    SECTION: Skills-Based Questions
+
+    Question 1
+    Question 2
+    Question 3
+
+    SECTION: Project-Based Questions
+
+    Question 4
+    Question 5
+    Question 6
+
+    SECTION: Experience-Based Questions
+
+    Question 7
+    Question 8
+
+    SECTION: Personalized Questions For You
+
+    Question 9
+    Question 10
+
+    Only questions.
+    No introductions.
+    No explanations.
+    No markdown.
+    """
+
+    try:
+
+        response = client.chat.completions.create(
+
+            model="llama-3.1-8b-instant",
+
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+
+        )
+
+        text = response.choices[0].message.content
+
+        questions = text.split("\n")
+
+        cleaned_questions = []
+
+        for q in questions:
+
+            q = q.strip()
+
+            if q:
+
+                q = q.lstrip("1234567890.- ")
+
+                cleaned_questions.append(q)
+
+        return {
+
+            "questions": cleaned_questions
+
+        }
+
+    except Exception as e:
+
+        return {
+
+            "error": str(e)
+
+        }

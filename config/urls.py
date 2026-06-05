@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from dashboard.views import HomeView, DashboardView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
 
@@ -29,4 +31,5 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('interviews/', include('interviews.urls')),
     path('chatbot/', include('chatbot.urls')),
-]
+    path('resume-ai/', include('resume_ai.urls')),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

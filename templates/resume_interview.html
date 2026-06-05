@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+    <div class="bg-white p-8 rounded-2xl shadow">
+
+        <h1 class="text-3xl font-bold mb-8">
+            Resume Interview Questions
+        </h1>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {% for question in questions %}
+
+                {% if "SECTION:" in question %}
+
+                    <h2 class="text-2xl font-bold mt-10 mb-5 text-gray-800">
+
+                        {{ question|cut:"SECTION:" }}
+
+                    </h2>
+
+                {% else %}
+
+                    <div class="bg-gray-50 border border-gray-200 p-5 rounded-xl mb-4">
+
+                        <p class="font-semibold text-gray-800 mb-3">
+                            {{ question }}
+                        </p>
+
+                        <input
+                            type="hidden"
+                            name="questions"
+                            value="{{ question }}"
+                        >
+
+                        <textarea
+                            name="answers"
+                            rows="4"
+                            class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                            placeholder="Write your answer here..."
+                        ></textarea>
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+            <button
+                type="submit"
+                class="bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800">
+
+                Submit Interview
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

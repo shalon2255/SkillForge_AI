@@ -1,83 +1,111 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- Main Container limiting max width, auto centering, and padding -->
+<div class="max-w-7xl mx-auto px-10 py-6">
+    <div class="h-[82vh] flex gap-5">
 
-<div class="max-w-5xl mx-auto h-[85vh] flex flex-col">
-
-    <!-- Header -->
-
-    <div class="bg-white shadow rounded-t-2xl p-6">
-
-        <h1 class="text-3xl font-bold">
-            SkillForge AI Assistant
-        </h1>
-
-    </div>
-
-
-    <!-- Chat Area -->
-
-    <div class="flex-1 bg-gray-100 p-6 overflow-y-auto space-y-6">
-
-        {% for chat in chat_history %}
-
-            <!-- User Message -->
-
-            <div class="flex justify-end">
-
-                <div class="bg-black text-white p-4 rounded-2xl max-w-xl">
-
-                    {{ chat.user }}
-
-                </div>
-
+        <!-- Compact Sidebar (Chat History) -->
+        <div class="w-64 bg-white rounded-2xl shadow-sm p-4 flex flex-col border border-gray-100 shrink-0">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="font-semibold text-sm text-gray-800 uppercase tracking-wider">Chat History</h2>
+                <form method="POST" action="{% url 'new-chat' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-gray-50 hover:bg-gray-100 text-gray-600 font-medium px-2.5 py-1 rounded-lg border border-gray-200 transition text-xs">
+                        + New
+                    </button>
+                </form>
             </div>
 
-
-            <!-- AI Response -->
-
-            <div class="flex justify-start">
-
-   <div class="bg-white p-4 rounded-2xl shadow max-w-3xl">
-    <pre class="whitespace-pre-wrap break-words font-sans text-sm leading-7 [word-break:break-word] [overflow-wrap:anywhere]">
-{{ chat.bot }}
-    </pre>
-</div>
-
+            <!-- Scrollable Session List Area with smaller text -->
+            <div class="flex-1 overflow-y-auto space-y-1.5 pr-1">
+                {% for session in chat_sessions %}
+                <div class="group relative bg-transparent rounded-lg hover:bg-gray-50 transition border border-transparent hover:border-gray-100">
+                    <div class="flex justify-between items-center w-full px-2.5 py-2">
+                        <a href="{% url 'chat-session' session.id %}" class="flex-1 text-xs font-medium text-gray-600 truncate pr-2">
+                            {{ session.title|truncatechars:22 }}
+                        </a>
+                        <form method="POST" action="{% url 'delete-chat' session.id %}" class="opacity-0 group-hover:opacity-100 transition shrink-0">
+                            {% csrf_token %}
+                            <button type="submit" class="text-gray-400 hover:text-red-500 text-[11px] transition">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
                 </div>
+                {% empty %}
+                <p class="text-gray-400 text-xs text-center mt-4">No chats yet</p>
+                {% endfor %}
+            </div>
+        </div>
 
+        <!-- Main Chat Area Container -->
+        <div class="flex-1 flex flex-col bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            
+            <!-- Chat Window Header -->
+            <div class="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-800">SkillForge AI Assistant</h1>
+                    <p class="text-xs text-gray-400 mt-0.5">Powered by AI</p>
+                </div>
             </div>
 
-        {% endfor %}
+            <!-- Messages Stream -->
+            <div class="flex-1 bg-[#fcfcfc] px-8 py-6 overflow-y-auto space-y-6">
+                {% for msg in messages %}
+                    {% if msg.is_user %}
+                        <!-- User Message (Right Side) -->
+                        <div class="flex justify-end">
+                            <div class="bg-gray-800 text-white px-5 py-3.5 rounded-2xl max-w-xl text-sm leading-6 shadow-sm">
+                                {{ msg.message }}
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- AI Assistant Message (Left Side) -->
+                        <div class="flex justify-start">
+                            <div class="bg-white px-5 py-4 rounded-2xl shadow-sm max-w-2xl border border-gray-100">
+                                <pre class="whitespace-pre-wrap break-words font-sans text-sm text-gray-800 leading-7">{{ msg.message }}</pre>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <!-- Welcoming Screen Placeholder -->
+                    <div class="h-full flex flex-col items-center justify-center text-center text-gray-400 my-auto pt-20">
+                        <div class="w-12 h-12 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center mb-3">
+                            <span class="text-xl">✨</span>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Start a conversation...</p>
+                        <p class="text-xs text-gray-400 mt-1">Ask questions, improve resumes, or crack interviews.</p>
+                    </div>
+                {% endfor %}
+            </div>
 
+            <!-- Soft-Tone Input Area Footer -->
+            <div class="p-4 border-t border-gray-100 bg-white">
+                <form method="POST" class="relative max-w-4xl mx-auto flex items-center bg-gray-50 rounded-2xl border border-gray-200 focus-within:border-gray-300 transition px-4 py-2.5">
+                    {% csrf_token %}
+                    
+                    <input 
+                        type="text" 
+                        name="message" 
+                        placeholder="Ask anything..." 
+                        autocomplete="off"
+                        class="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none pr-12 py-1"
+                    >
+
+                    <!-- Circular Softened Send Button -->
+                    <button type="submit" class="absolute right-3 bg-gray-700 hover:bg-gray-600 text-white w-9 h-9 rounded-full flex items-center justify-center transition shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transform -rotate-45 -translate-y-[1px] translate-x-[0.5px]">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                        </svg>
+                    </button>
+                </form>
+                <div class="text-center text-[10px] text-gray-400 mt-2">
+                    SkillForge AI can make mistakes. Verify important information.
+                </div>
+            </div>
+
+        </div>
     </div>
-
-
-    <!-- Input Box -->
-
-    <div class="bg-white p-4 rounded-b-2xl shadow">
-
-        <form method="POST" class="flex gap-4">
-
-            {% csrf_token %}
-
-            <input
-                type="text"
-                name="message"
-                placeholder="Ask anything..."
-                class="flex-1 border rounded-xl px-4 py-3 outline-none">
-
-            <button
-                class="bg-black text-white px-6 py-3 rounded-xl">
-
-                Send
-
-            </button>
-
-        </form>
-
-    </div>
-
 </div>
-
 {% endblock %}

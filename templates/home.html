@@ -1,37 +1,134 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 
-<div class="text-center mt-20">
+<!-- Hero Section: full viewport, bleeds out of main padding -->
+<section class="relative flex items-center overflow-hidden"
+         style="min-height: calc(100vh - 56px); margin: -2rem -1.5rem 0 -1.5rem;">
 
-    <h1 class="text-5xl font-bold">
-        SkillForge AI
-    </h1>
-
-    <p class="text-gray-600 mt-6 text-lg">
-        AI-Powered Technical Learning & Mock Interview Platform
-    </p>
-
-    <div class="mt-10">
-
-        {% if request.user.is_authenticated %}
-
-            <a href="{% url 'dashboard' %}"
-               class="bg-black text-white px-6 py-3 rounded-xl">
-                Go To Dashboard
-            </a>
-
-        {% else %}
-
-            <a href="{% url 'register' %}"
-               class="bg-black text-white px-6 py-3 rounded-xl">
-                Get Started
-            </a>
-
-        {% endif %}
-
+    <!-- Background image fills entire section -->
+    <div class="absolute inset-0 z-0">
+        <img src="{% static 'photo.png' %}" alt="hero"
+             class="w-full h-full object-cover object-center">
+        <!-- gradient: solid white on left fading to transparent on right -->
+        <div class="absolute inset-0"
+     style="background: linear-gradient(
+        to right,
+        rgba(255,255,255,0.95) 0%,
+        rgba(255,255,255,0.95) 20%,
+        rgba(255,255,255,0.25) 50%,
+        rgba(255,255,255,0) 60%
+     );">
+</div>
     </div>
 
-</div>
+    <!-- Hero content -->
+    <div class="relative z-10 w-full px-16">
+        <div class="max-w-lg">
+
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-1.5 mb-8 shadow-sm">
+                <span class="text-brand-500">✦</span>
+                <span class="text-sm text-gray-600 font-medium">AI-Powered Career Growth</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-6xl font-bold text-gray-900 leading-tight mb-6">
+                Learn. Practice.<br>
+                Grow. Succeed.
+            </h1>
+
+            <!-- Subtext -->
+            <p class="text-gray-500 text-lg leading-relaxed mb-10">
+                SkillForge AI is your all-in-one platform to build skills,
+                crack interviews, improve your resume, and accelerate
+                your career with the power of AI.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex items-center gap-4">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}"
+                       class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-medium px-7 py-3.5 rounded-md transition-colors">
+                        Go to Dashboard →
+                    </a>
+                    <a href="{% url 'chatbot' %}"
+                       class="inline-flex items-center gap-2 border border-gray-300 hover:border-brand-400 hover:text-brand-600 text-gray-700 font-medium px-7 py-3.5 rounded-md transition-colors bg-white/80">
+                        AI Assistant
+                    </a>
+                {% else %}
+                    <a href="{% url 'register' %}"
+                       class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-700 text-white font-medium px-7 py-3.5 rounded-md transition-colors">
+                        Get Started →
+                    </a>
+                    <a href="#features"
+                       class="inline-flex items-center gap-2 border border-gray-300 hover:border-brand-400 hover:text-brand-600 text-gray-700 font-medium px-7 py-3.5 rounded-md transition-colors bg-white/80">
+                        Explore Features
+                    </a>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20">
+    <div class="text-center mb-12">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-2">Everything you need to grow</h2>
+        <p class="text-gray-400 text-sm">Four powerful tools, one platform.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <a href="{% url 'chatbot' %}" class="group bg-white border border-gray-200 rounded-xl p-6 hover:border-brand-300 hover:shadow-sm transition-all">
+            <div class="w-10 h-10 bg-brand-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-brand-100 transition-colors">
+                <span class="text-brand-500 text-lg">💬</span>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-1.5">AI Assistant</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Get instant answers, explanations, and guidance from your personal AI tutor.</p>
+        </a>
+
+        <a href="{% url 'resume-upload' %}" class="group bg-white border border-gray-200 rounded-xl p-6 hover:border-brand-300 hover:shadow-sm transition-all">
+            <div class="w-10 h-10 bg-brand-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-brand-100 transition-colors">
+                <span class="text-brand-500 text-lg">📄</span>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-1.5">Resume AI</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Upload your resume and get smart feedback to stand out to recruiters.</p>
+        </a>
+
+        <a href="{% url 'interviews' %}" class="group bg-white border border-gray-200 rounded-xl p-6 hover:border-brand-300 hover:shadow-sm transition-all">
+            <div class="w-10 h-10 bg-brand-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-brand-100 transition-colors">
+                <span class="text-brand-500 text-lg">🎯</span>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-1.5">Interviews</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Practice mock interviews and get real-time feedback to ace your next opportunity.</p>
+        </a>
+
+        <a href="{% url 'dashboard' %}" class="group bg-white border border-gray-200 rounded-xl p-6 hover:border-brand-300 hover:shadow-sm transition-all">
+            <div class="w-10 h-10 bg-brand-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-brand-100 transition-colors">
+                <span class="text-brand-500 text-lg">📊</span>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-1.5">Dashboard</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Track your progress, skills, and learning milestones all in one place.</p>
+        </a>
+
+    </div>
+</section>
+
+<!-- CTA Banner for guests -->
+{% if not request.user.is_authenticated %}
+<section class="bg-brand-500 rounded-2xl px-10 py-12 mb-10 flex flex-col md:flex-row items-center justify-between gap-6">
+    <div>
+        <h2 class="text-white text-xl font-semibold mb-1">Ready to start your journey?</h2>
+        <p class="text-blue-100 text-sm">Join thousands of learners already using SkillForge AI.</p>
+    </div>
+    <a href="{% url 'register' %}"
+       class="bg-white text-brand-600 hover:bg-blue-50 font-semibold px-6 py-2.5 rounded-md text-sm transition-colors whitespace-nowrap">
+        Create Free Account
+    </a>
+</section>
+{% endif %}
 
 {% endblock %}
